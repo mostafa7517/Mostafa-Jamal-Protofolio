@@ -372,9 +372,10 @@
       color: var(--text-color); /* fixed text color */
     }
 
-    .service-card .card-body {
-      padding: 1.5rem; /* added padding for spacing */
+    [data-theme="dark"] .service-card .text-muted {
+    color: #e0e0e0 !important; /* أفتح شويه */
     }
+
 
     .service-card.visible {
       opacity: 1;
@@ -449,7 +450,6 @@
       color: var(--primary-color); /* keep hover effect */
     }
 
-
     /* Custom stagger delays */
     .stagger-1 {
       transition-delay: 0.1s;
@@ -468,6 +468,41 @@
     }
     .stagger-6 {
       transition-delay: 0.6s;
+    }
+    .stagger-7 {
+      transition-delay: 0.7s;
+    }
+    .stagger-8 {
+      transition-delay: 0.8s;
+    }
+
+    /* Skill badges styling */
+    .skill-tags {
+      margin-top: 0.75rem;
+    }
+
+    .skill-tags .badge {
+      font-size: 0.75rem;
+      padding: 0.4rem 0.7rem;
+      font-weight: 500;
+    }
+
+    .bg-outline-primary {
+      background-color: transparent !important;
+      border: 1px solid var(--primary-color) !important;
+      color: var(--primary-color) !important;
+    }
+
+    /* Light mode adjustments for skill cards */
+    [data-theme="light"] .service-card {
+      background: var(--card-bg-light);
+      color: var(--text-color-light);
+      border: 1px solid #e9ecef;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    [data-theme="light"] .service-card .text-muted {
+      color: var(--text-muted-light) !important;
     }
 
     /* 4. Smooth modern transitions for sections */
@@ -502,6 +537,8 @@
           <li class="nav-item"><a href="#home" class="nav-link">Home</a></li>
           <li class="nav-item"><a href="#about" class="nav-link">About</a></li>
           <li class="nav-item"><a href="#resume" class="nav-link">Resume</a></li>
+          <li class="nav-item"><a href="#skills" class="nav-link">Skills</a></li>
+          <li class="nav-item"><a href="#experience" class="nav-link">Experience</a></li>
           <li class="nav-item"><a href="#services" class="nav-link">Services</a></li>
           <li class="nav-item"><a href="#portfolio" class="nav-link">Portfolio</a></li>
           <li class="nav-item dropdown">
@@ -555,11 +592,11 @@
     <div class="container">
       <h2 class="text-center mb-4 fade-in animate-text">About Me</h2>
       <p class="text-center fade-in animate-text stagger-2">
-        Before I became a CS student, I saw websites that weren’t just functional, they felt alive. They made me stop, explore, and think,I want to create stuff like this. That spark lit a fire in me to build digital experiences that actually connect with people.
+        Before I start my tech journey, I saw websites that weren't just functional, they felt alive. They made me stop, explore, and think,I want to create stuff like this. That spark lit a fire in me to build digital experiences that actually connect with people.
           <br>
-        I’m Mostafa, a developer who sees stories in code. I turn messy, complex ideas into clean, smooth solutions, but my real edge is <strong> experiences that sell themselves</strong>, interfaces that guide, engage, and convert effortlessly. I don’t just make projects,<b> I craft journeys that leave a mark</b>.
+        I'm Mostafa, a developer who sees stories in code. I turn messy, complex ideas into clean, smooth solutions, but my real edge is <strong> experiences that sell themselves</strong>, interfaces that guide, engage, and convert effortlessly. I don't just make projects,<b> I craft journeys that leave a mark</b>.
           <br>
-        Every project is a chance to push boundaries, flex creativity, and tell a story that sticks. I don’t follow trends, I make them. I design digital journeys that people don’t just use, they feel.
+        Every project is a chance to push boundaries, flex creativity, and tell a story that sticks. I don't follow trends, I make them. I design digital journeys that people don't just use, they feel.
       </p>
     </div>
   </section>
@@ -641,6 +678,208 @@
           <div class="col-md-12 fade-in">
             <h4 class="animate-text">Languages</h4>
             <p class="animate-text stagger-2">Arabic: Native | English: Fluent</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Skills Section -->
+  <section id="skills" class="py-5 bg-dark text-light">
+    <div class="container">
+      <h2 class="text-center mb-5 fade-in animate-text">Skills</h2>
+      
+      <!-- Technical Skills -->
+      <div class="row mb-5">
+        <div class="col-12">
+          <h3 class="text-center mb-4 fade-in animate-text stagger-1">Technical Skills</h3>
+          <div class="row g-4">
+            <!-- Frontend Development -->
+            <div class="col-md-6 col-lg-3">
+              <div class="card service-card h-100 text-center stagger-1">
+                <div class="card-body">
+                  <i class="fab fa-html5 fa-2x mb-3 text-primary"></i>
+                  <h6 class="card-title">Frontend Development</h6>
+                  <div class="skill-tags">
+                    <span class="badge bg-primary me-1 mb-1">HTML5</span>
+                    <span class="badge bg-primary me-1 mb-1">CSS3</span>
+                    <span class="badge bg-primary me-1 mb-1">JavaScript</span>
+                    <span class="badge bg-primary me-1 mb-1">React.js</span>
+                    <span class="badge bg-primary me-1 mb-1">Bootstrap</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- UI/UX Design -->
+            <div class="col-md-6 col-lg-3">
+              <div class="card service-card h-100 text-center stagger-2">
+                <div class="card-body">
+                  <i class="fas fa-paint-brush fa-2x mb-3 text-primary"></i>
+                  <h6 class="card-title">UI/UX Design</h6>
+                  <div class="skill-tags">
+                    <span class="badge bg-primary me-1 mb-1">Figma</span>
+                    <span class="badge bg-primary me-1 mb-1">Visual Design</span>
+                    <span class="badge bg-primary me-1 mb-1">Framer</span>
+                    <span class="badge bg-primary me-1 mb-1">User Experience</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Backend & Database -->
+            <div class="col-md-6 col-lg-3">
+              <div class="card service-card h-100 text-center stagger-3">
+                <div class="card-body">
+                  <i class="fas fa-database fa-2x mb-3 text-primary"></i>
+                  <h6 class="card-title">Backend & Database</h6>
+                  <div class="skill-tags">
+                    <span class="badge bg-primary me-1 mb-1">C#</span>
+                    <span class="badge bg-primary me-1 mb-1">.NET</span>
+                    <span class="badge bg-primary me-1 mb-1">SQL</span>
+                    <span class="badge bg-primary me-1 mb-1">C++</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Tools & Version Control -->
+            <div class="col-md-6 col-lg-3">
+              <div class="card service-card h-100 text-center stagger-4">
+                <div class="card-body">
+                  <i class="fab fa-git-alt fa-2x mb-3 text-primary"></i>
+                  <h6 class="card-title">Tools & Version Control</h6>
+                  <div class="skill-tags">
+                    <span class="badge bg-primary me-1 mb-1">Git</span>
+                    <span class="badge bg-primary me-1 mb-1">GitHub</span>
+                    <span class="badge bg-primary me-1 mb-1">VS Code</span>
+                    <span class="badge bg-primary me-1 mb-1">DevTools</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Soft Skills -->
+      <div class="row">
+        <div class="col-12">
+          <h3 class="text-center mb-4 fade-in animate-text stagger-2">Soft Skills</h3>
+          <div class="row g-4">
+            <div class="col-md-6 col-lg-3">
+              <div class="card service-card h-100 text-center stagger-5">
+                <div class="card-body">
+                  <i class="fas fa-users fa-2x mb-3 text-primary"></i>
+                  <h6 class="card-title">Leadership</h6>
+                  <p class="card-text text-muted">Team management and project coordination</p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-3">
+              <div class="card service-card h-100 text-center stagger-6">
+                <div class="card-body">
+                  <i class="fas fa-comments fa-2x mb-3 text-primary"></i>
+                  <h6 class="card-title">Communication</h6>
+                  <p class="card-text text-muted">Clear and effective collaboration</p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-3">
+              <div class="card service-card h-100 text-center stagger-7">
+                <div class="card-body">
+                  <i class="fas fa-lightbulb fa-2x mb-3 text-primary"></i>
+                  <h6 class="card-title">Problem Solving</h6>
+                  <p class="card-text text-muted">Creative solutions to complex challenges</p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-3">
+              <div class="card service-card h-100 text-center stagger-8">
+                <div class="card-body">
+                  <i class="fas fa-clock fa-2x mb-3 text-primary"></i>
+                  <h6 class="card-title">Time Management</h6>
+                  <p class="card-text text-muted">Efficient project delivery and organization</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Experience Section -->
+  <section id="experience" class="py-5 bg-light-section">
+    <div class="container">
+      <h2 class="text-center mb-5 fade-in animate-text">Hands-On Experience</h2>
+      <div class="row g-4">
+        <!-- Frontend Intern Experience -->
+        <div class="col-lg-4">
+          <div class="card portfolio-card h-100 stagger-1">
+            <div class="card-body">
+              <div class="d-flex align-items-center mb-3">
+                <i class="fas fa-code fa-2x text-primary me-3"></i>
+                <div>
+                  <h5 class="card-title mb-1">Frontend Intern</h5>
+                  <h6 class="text-muted">Endex Group</h6>
+                </div>
+              </div>
+              <p class="text-muted mb-2"><i class="fas fa-calendar-alt me-2"></i>Jun 2024 – Sep 2024</p>
+              <p class="card-text">Developed responsive web interfaces using modern frontend technologies. Collaborated with design teams to implement pixel-perfect UI components and enhanced user experience across multiple projects.</p>
+              <div class="skill-tags">
+                <span class="badge bg-outline-primary me-1 mb-1">React.js</span>
+                <span class="badge bg-outline-primary me-1 mb-1">JavaScript</span>
+                <span class="badge bg-outline-primary me-1 mb-1">CSS3</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- UI Designer Intern Experience -->
+        <div class="col-lg-4">
+          <div class="card portfolio-card h-100 stagger-2">
+            <div class="card-body">
+              <div class="d-flex align-items-center mb-3">
+                <i class="fas fa-paint-brush fa-2x text-primary me-3"></i>
+                <div>
+                  <h5 class="card-title mb-1">UI Designer Intern</h5>
+                  <h6 class="text-muted">BeFound</h6>
+                </div>
+              </div>
+              <p class="text-muted mb-2"><i class="fas fa-calendar-alt me-2"></i>Jun 2023 – Sep 2023</p>
+              <p class="card-text">Created user-centered design solutions and wireframes. Worked on improving user interfaces for web applications and collaborated with development teams to ensure design feasibility.</p>
+              <div class="skill-tags">
+                <span class="badge bg-outline-primary me-1 mb-1">Figma</span>
+                <span class="badge bg-outline-primary me-1 mb-1">UI Design</span>
+                <span class="badge bg-outline-primary me-1 mb-1">Wireframing</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Team Leader Experience -->
+        <div class="col-lg-4">
+          <div class="card portfolio-card h-100 stagger-3">
+            <div class="card-body">
+              <div class="d-flex align-items-center mb-3">
+                <i class="fas fa-users fa-2x text-primary me-3"></i>
+                <div>
+                  <h5 class="card-title mb-1">Team Leader</h5>
+                  <h6 class="text-muted">Vodafone</h6>
+                </div>
+              </div>
+              <p class="text-muted mb-2"><i class="fas fa-calendar-alt me-2"></i>Jan 2023 – May 2023</p>
+              <p class="card-text">Led cross-functional teams to deliver projects on time. Coordinated between different departments, managed project timelines, and ensured quality deliverables while maintaining team motivation.</p>
+              <div class="skill-tags">
+                <span class="badge bg-outline-primary me-1 mb-1">Leadership</span>
+                <span class="badge bg-outline-primary me-1 mb-1">Project Management</span>
+                <span class="badge bg-outline-primary me-1 mb-1">Team Coordination</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -742,7 +981,6 @@
           </div>
         </div>
 
-
         <div class="col-md-4">
           <div class="card portfolio-card stagger-1">
             <img src="img/BookStore3.png" class="card-img-top" alt="UI Projects" />
@@ -757,8 +995,6 @@
             </div>
           </div>
         </div>
-
-
 
         <!--<div class="col-md-4">
           <div class="card portfolio-card stagger-1">
@@ -782,7 +1018,8 @@
     View All Designs on Figma
   </a>
 </div>
-
+    </div>
+  </section>
 
   <!-- Contact Section -->
   <section id="contact" class="py-5 bg-dark text-light">
@@ -921,6 +1158,7 @@
         hero.style.transform = `translateY(${scrolled * 0.5}px)`;
       }
     });
+    
   </script>
 </body>
 </html>
