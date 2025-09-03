@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Discovery App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
+    <style>
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+        
+        .skeleton-dark {
+            background: linear-gradient(90deg, #374151 25%, #4b5563 50%, #374151 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+        
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .scroll-smooth {
+            scroll-behavior: smooth;
+        }
+        
+        .movie-card:hover img {
+            transform: scale(1.1);
+        }
+        
+        .movie-card img {
+            transition: transform 0.3s ease;
+        }
+    </style>
+</head>
+<body class="scroll-smooth">
+    <div id="app" class="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-300">
+        <!-- Header -->
+        <header class="sticky top-0 z-50 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md border-b border-gray-200 dark:border-gray-700 transition-colors duration-300">
+            <div class="container mx-auto px-4 py-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-4">
+                        <h1 class="text-2xl font-bold text-red-600">🎬 MovieDB</h1>
+                        <nav class="hidden md:flex space-x-6">
+                            <button id="home-btn" class="nav-link text-red-600 border-b-2 border-red-600 pb-1">Home</button>
+                            <button id="watchlist-btn" class="nav-link hover:text-red-600 transition-colors">
+                                Watchlist (<span id="watchlist-count">0</span>)
+                            </button>
+                        </nav>
+                    </div>
+                    
+                    <div class="flex items-center space-x-4">
+                        <!-- Search Bar -->
+                        <div class="relative hidden sm:block">
+                            <input 
+                                type="text" 
+                                id="search-input" 
+                                placeholder="Search movies..." 
+                                class="pl-10 pr-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-red-500 w-64"
+                            >
+                            <svg class="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                        </div>
+                        
+                        <!-- Dark Mode Toggle -->
+                        <button id="dark-mode-toggle" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                            <svg id="sun-icon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                            </svg>
+                            <svg id="moon-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Mobile Search -->
+                <div class="mt-4 sm:hidden">
+                    <div class="relative">
+                        <input 
+                            type="text" 
+                            id="mobile-search-input" 
+                            placeholder="Search movies..." 
+                            class="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-red-500"
+                        >
+                        <svg class="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main id="main-content">
+            <!-- Home Page -->
+            <div id="home-page" class="page-content">
+                <!-- Filters -->
+                <div class="container mx-auto px-4 py-6">
+                    <div class="flex flex-wrap gap-4 items-center justify-between">
+                        <div class="flex flex-wrap gap-4">
+                            <!-- Genre Filter -->
+                            <div class="relative">
+                                <select id="genre-filter" class="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-red-500">
+                                    <option value="">All Genres</option>
+                                    <option value="28">Action</option>
+                                    <option value="12">Adventure</option>
+                                    <option value="16">Animation</option>
+                                    <option value="35">Comedy</option>
+                                    <option value="80">Crime</option>
+                                    <option value="18">Drama</option>
+                                    <option value="10751">Family</option>
+                                    <option value="14">Fantasy</option>
+                                    <option value="36">History</option>
+                                    <option value="27">Horror</option>
+                                    <option value="9648">Mystery</option>
+                                    <option value="10749">Romance</option>
+                                    <option value="878">Sci-Fi</option>
+                                    <option value="53">Thriller</option>
+                                </select>
+                            </div>
+                            
+                            <!-- Sort Filter -->
+                            <div class="relative">
+                                <select id="sort-filter" class="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-red-500">
+                                    <option value="popularity">Sort by Popularity</option>
+                                    <option value="rating">Sort by Rating</option>
+                                    <option value="year">Sort by Year</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="text-sm text-gray-500 dark:text-gray-400">
+                            <span id="results-count">0</span> movies found
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Movies Grid -->
+                <div class="container mx-auto px-4 pb-8">
+                    <div id="movies-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
+                        <!-- Movies will be loaded here -->
+                    </div>
+                    
+                    <!-- Load More Button -->
+                    <div class="text-center mt-8">
+                        <button id="load-more-btn" class="px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold transition-colors hidden">
+                            Load More Movies
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Movie Details Page -->
+            <div id="details-page" class="page-content hidden">
+                <!-- Content will be dynamically loaded -->
+            </div>
+
+            <!-- Watchlist Page -->
+            <div id="watchlist-page" class="page-content hidden">
+                <div class="container mx-auto px-4 py-8">
+                    <div class="flex items-center justify-between mb-8">
+                        <h1 class="text-4xl font-bold">My Watchlist</h1>
+                        <button id="back-to-home" class="flex items-center space-x-2 px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                            </svg>
+                            <span>Back to Home</span>
+                        </button>
+                    </div>
+                    
+                    <div id="watchlist-content">
+                        <!-- Watchlist movies will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Mock movie data
+        const MOCK_MOVIES = [
+            {
+                id: 1,
+                title: "Guardians of the Galaxy Vol. 3",
+                poster_path: "https://image.tmdb.org/t/p/w500/r2J02Z2OpNTctfOSN1Ydgii51I3.jpg",
+                backdrop_path: "https://image.tmdb.org/t/p/w1280/5YZbUmjbMa3ClvSW1Wj3D6XGolb.jpg",
+                vote_average: 8.2,
+                release_date: "2023-05-05",
+                runtime: 150,
+                overview: "Peter Quill, still reeling from the loss of Gamora, must rally his team around him to defend the universe along with protecting one of their own. A mission that, if not completed successfully, could quite possibly lead to the end of the Guardians as we know them.",
+                genre_ids: [28, 12, 878],
+                popularity: 1543.612
+            },
+            {
+                id: 2,
+                title: "Spider-Man: Across the Spider-Verse",
+                poster_path: "https://image.tmdb.org/t/p/w500/8Vt6mWEReuy4Of61Lnj5Xj704m8.jpg",
+                backdrop_path: "https://image.tmdb.org/t/p/w1280/nHf61UzkfFno5X1ofIhugCPus2R.jpg",
+                vote_average: 8.7,
+                release_date: "2023-06-02",
+                runtime: 140,
+                overview: "After reuniting with Gwen Stacy, Brooklyn's full-time, friendly neighborhood Spider-Man is catapulted across the Multiverse, where he encounters the Spider Society, a team of Spider-People charged with protecting the Multiverse's very existence.",
+                genre_ids: [16, 28, 12],
+                popularity: 1234.567
+            },
+            {
+                id: 3,
+                title: "John Wick: Chapter 4",
+                poster_path: "https://image.tmdb.org/t/p/w500/vZloFAK7NmvMGKE7VkF5UHaz0I.jpg",
+                backdrop_path: "https://image.tmdb.org/t/p/w1280/h8gHn0OzBoaefsYseUByqsmEDMY.jpg",
+                vote_average: 7.8,
+                release_date: "2023-03-24",
+                runtime: 169,
+                overview: "With the price on his head ever increasing, John Wick uncovers a path to defeating The High Table. But before he can earn his freedom, Wick must face off against a new enemy with powerful alliances across the globe.",
+                genre_ids: [28, 53, 80],
+                popularity: 987.321
+            },
+            {
+                id: 4,
+                title: "The Little Mermaid",
+                poster_path: "https://image.tmdb.org/t/p/w500/ym1dxyOk4jFcSl4Q2zmRrA5BEEN.jpg",
+                backdrop_path: "https://image.tmdb.org/t/p/w1280/9jbTYReN6ivu5HSp3EhTLPkjK3z.jpg",
+                vote_average: 7.2,
+                release_date: "2023-05-26",
+                runtime: 135,
+                overview: "The youngest of King Triton's daughters, and the most defiant, Ariel longs to find out more about the world beyond the sea, and while visiting the surface, falls for the dashing Prince Eric.",
+                genre_ids: [10749, 10751, 14],
+                popularity: 756.234
+            },
+            {
+                id: 5,
+                title: "Fast X",
+                poster_path: "https://image.tmdb.org/t/p/w500/fiVW06jE7z9YnO4trhaMEdclSiC.jpg",
+                backdrop_path: "https://image.tmdb.org/t/p/w1280/4XM8DUTQb3lhLemJC51Jx4a2EuA.jpg",
+                vote_average: 7.1,
+                release_date: "2023-05-19",
+                runtime: 141,
+                overview: "Over many missions and against impossible odds, Dom Toretto and his family have outsmarted, out-nerved and outdriven every foe in their path. Now, they confront the most lethal opponent they've ever faced.",
+                genre_ids: [28, 80, 53],
+                popularity: 654.789
+            },
+            {
+                id: 6,
+                title: "Oppenheimer",
+                poster_path: "https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg",
+                backdrop_path: "https://image.tmdb.org/t/p/w1280/fm6KqXpk3M2HVveHwCrBSSBaO0V.jpg",
+                vote_average: 8.5,
+                release_date: "2023-07-21",
+                runtime: 180,
+                overview: "The story of J. Robert Oppenheimer's role in the development of the atomic bomb during World War II.",
+                genre_ids: [18, 36],
+                popularity: 2100.456
+            },
+            {
+                id: 7,
+                title: "Barbie",
+                poster_path: "https://image.tmdb.org/t/p/w500/iuFNMS8U5cb6xfzi51Dbkovj7vM.jpg",
+                backdrop_path: "https://image.tmdb.org/t/p/w1280/ctmdrQkSs88Qvj3MHlZhqzQ9gQw.jpg",
+                vote_average: 7.3,
+                release_date: "2023-07-21",
+                runtime: 114,
+                overview: "Barbie and Ken are having the time of their lives in the colorful and seemingly perfect world of Barbie Land. However, when they get a chance to go to the real world, they soon discover the joys and perils of living among humans.",
+                genre_ids: [35, 12, 14],
+                popularity: 1987.432
+            },
+            {
+                id: 8,
+                title: "Indiana Jones and the Dial of Destiny",
+                poster_path: "https://image.tmdb.org/t/p/w500/Af4bXE63pVsb2FtbW8uYIyPBadD.jpg",
+                backdrop_path: "https://image.tmdb.org/t/p/w1280/35z8hWuzfFUZQaYog8E9LsXW3iI.jpg",
+                vote_average: 6.8,
+                release_date: "2023-06-30",
+                runtime: 154,
+                overview: "Finding himself in a new era, approaching retirement, Indy wrestles with fitting into a world that seems to have outgrown him. But as the tentacles of an all-too-familiar evil return in the form of an old rival, Indy must don his hat and pick up his whip once more.",
+                genre_ids: [28, 12],
+                popularity: 876.543
+            }
+        ];
+
+        const GENRES = {
+            28: "Action",
+            12: "Adventure", 
+            16: "Animation",
+            35: "Comedy",
+            80: "Crime",
+            18: "Drama",
+            10751: "Family",
+            14: "Fantasy",
+            36: "History",
+            27: "Horror",
+            10402: "Music",
+            9648: "Mystery",
+            10749: "Romance",
+            878: "Science Fiction",
+            53: "Thriller",
+            10752: "War",
+            37: "Western"
+        };
+
+        // App state
+        let currentPage = 'home';
+        let currentMovie = null;
+        let filteredMovies = [];
+        let displayedMoviesCount = 6;
+        let watchlist = JSON.parse(localStorage.getItem('movieWatchlist') || '[]');
+        let isDarkMode = localStorage.getItem('darkMode') === 'true';
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+        });
+
+        function initializeApp() {
+            // Set initial dark mode
+            if (isDarkMode) {
+                document.documentElement.classList.add('dark');
+                document.getElementById('sun-icon').classList.remove('hidden');
+                document.getElementById('moon-icon').classList.add('hidden');
+            }
+
+            // Load initial movies
+            filteredMovies = [...MOCK_MOVIES];
+            displayMovies();
+            updateWatchlistCount();
+
+            // Event listeners
+            setupEventListeners();
+        }
+
+        function setupEventListeners() {
+            // Navigation
+            document.getElementById('home-btn').addEventListener('click', () => showPage('home'));
+            document.getElementById('watchlist-btn').addEventListener('click', () => showPage('watchlist'));
+
+            // Search
+            document.getElementById('search-input').addEventListener('input', handleSearch);
+            document.getElementById('mobile-search-input').addEventListener('input', handleSearch);
+
+            // Filters
+            document.getElementById('genre-filter').addEventListener('change', applyFilters);
+            document.getElementById('sort-filter').addEventListener('change', applyFilters);
+
+            // Dark mode
+            document.getElementById('dark-mode-toggle').addEventListener('click', toggleDarkMode);
+
+            // Load more
+            document.getElementById('load-more-btn').addEventListener('click', loadMoreMovies);
+        }
+
+        function showPage(page) {
+            // Hide all pages
+            document.querySelectorAll('.page-content').forEach(p => p.classList.add('hidden'));
+            
+            // Update navigation
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('text-red-600', 'border-b-2', 'border-red-600', 'pb-1');
+                link.classList.add('hover:text-red-600');
+            });
+
+            currentPage = page;
+
+            switch(page) {
+                case 'home':
+                    document.getElementById('home-page').classList.remove('hidden');
+                    document.getElementById('home-btn').classList.add('text-red-600', 'border-b-2', 'border-red-600', 'pb-1');
+                    document.getElementById('home-btn').classList.remove('hover:text-red-600');
+                    break;
+                case 'watchlist':
+                    document.getElementById('watchlist-page').classList.remove('hidden');
+                    document.getElementById('watchlist-btn').classList.add('text-red-600', 'border-b-2', 'border-red-600', 'pb-1');
+                    document.getElementById('watchlist-btn').classList.remove('hover:text-red-600');
+                    displayWatchlist();
+                    break;
+                case 'details':
+                    document.getElementById('details-page').classList.remove('hidden');
+                    displayMovieDetails();
+                    break;
+            }
+        }
+
+        function handleSearch(e) {
+            const query = e.target.value.toLowerCase();
+            // Sync both search inputs
+            if (e.target.id === 'search-input') {
+                document.getElementById('mobile-search-input').value = e.target.value;
+            } else {
+                document.getElementById('search-input').value = e.target.value;
+            }
+            applyFilters();
+        }
+
+        function applyFilters() {
+            const searchQuery = document.getElementById('search-input').value.toLowerCase();
+            const selectedGenre = document.getElementById('genre-filter').value;
+            const sortBy = document.getElementById('sort-filter').value;
+
+            // Filter movies
+            filteredMovies = MOCK_MOVIES.filter(movie => {
+                const matchesSearch = movie.title.toLowerCase().includes(searchQuery);
+                const matchesGenre = !selectedGenre || movie.genre_ids.includes(parseInt(selectedGenre));
+                return matchesSearch && matchesGenre;
+            });
+
+            // Sort movies
+            filteredMovies.sort((a, b) => {
+                switch (sortBy) {
+                    case 'rating':
+                        return b.vote_average - a.vote_average;
+                    case 'year':
+                        return new Date(b.release_date) - new Date(a.release_date);
+                    default:
+                        return b.popularity - a.popularity;
+                }
+            });
+
+            displayedMoviesCount = 6;
+            displayMovies();
+        }
+
+        function displayMovies() {
+            const grid = document.getElementById('movies-grid');
+            const moviesToShow = filteredMovies.slice(0, displayedMoviesCount);
+            
+            // Update results count
+            document.getElementById('results-count').textContent = filteredMovies.length;
+
+            // Show/hide load more button
+            const loadMoreBtn = document.getElementById('load-more-btn');
+            if (displayedMoviesCount < filteredMovies.length) {
+                loadMoreBtn.classList.remove('hidden');
+            } else {
+                loadMoreBtn.classList.add('hidden');
+            }
+
+            // Create movie cards HTML
+            grid.innerHTML = moviesToShow.map(movie => createMovieCardHTML(movie)).join('');
+
+            // Add click events to movie cards
+            moviesToShow.forEach(movie => {
+                document.getElementById(`movie-${movie.id}`).addEventListener('click', () => {
+                    currentMovie = movie;
+                    showPage('details');
+                });
+            });
+        }
+
+        function createMovieCardHTML(movie) {
+            const isInWatchlist = watchlist.some(m => m.id === movie.id);
+            return `
+                <div id="movie-${movie.id}" class="movie-card relative group cursor-pointer transform transition-all duration-300 hover:scale-105 fade-in">
+                    <div class="relative overflow-hidden rounded-lg shadow-lg">
+                        <img 
+                            src="${movie.poster_path}" 
+                            alt="${movie.title}"
+                            class="w-full h-80 object-cover"
+                            loading="lazy"
+                        >
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <div class="absolute bottom-4 left-4 right-4">
+                                <h3 class="text-white font-bold text-lg mb-2 line-clamp-2">${movie.title}</h3>
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center space-x-2">
+                                        <div class="flex items-center">
+                                            <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                            </svg>
+                                            <span class="text-white ml-1 text-sm">${movie.vote_average.toFixed(1)}</span>
+                                        </div>
+                                        <span class="text-gray-300 text-sm">${new Date(movie.release_date).getFullYear()}</span>
+                                    </div>
+                                    <button 
+                                        onclick="event.stopPropagation(); toggleWatchlist(${movie.id})"
+                                        class="p-1 rounded-full hover:bg-white/20 transition-colors"
+                                    >
+                                        <svg class="w-5 h-5 ${isInWatchlist ? 'text-red-500 fill-current' : 'text-white'}" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function loadMoreMovies() {
+            displayedMoviesCount += 6;
+            displayMovies();
+        }
+
+        function toggleWatchlist(movieId) {
+            const movie = MOCK_MOVIES.find(m => m.id === movieId);
+            const isInWatchlist = watchlist.some(m => m.id === movieId);
+
+            if (isInWatchlist) {
+                watchlist = watchlist.filter(m => m.id !== movieId);
+            } else {
+                watchlist.push(movie);
+            }
+
+            localStorage.setItem('movieWatchlist', JSON.stringify(watchlist));
+            updateWatchlistCount();
+            
+            // Refresh current view
+            if (currentPage === 'home') {
+                displayMovies();
+            } else if (currentPage === 'watchlist') {
+                displayWatchlist();
+            } else if (currentPage === 'details') {
+                displayMovieDetails();
+            }
+        }
+
+        function updateWatchlistCount() {
+            document.getElementById('watchlist-count').textContent = watchlist.length;
+        }
+
+        function displayWatchlist() {
+            const content = document.getElementById('watchlist-content');
+            
+            if (watchlist.length === 0) {
+                content.innerHTML = `
+                    <div class="text-center py-16">
+                        <svg class="w-16 h-16 mx-auto mb-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                        </svg>
+                        <p class="text-xl text-gray-500 dark:text-gray-400">Your watchlist is empty</p>
+                        <p class="text-gray-400 mb-6">Add some movies to get started!</p>
+                        <button onclick="showPage('home')" class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors">
+                            Browse Movies
+                        </button>
+                    </div>
+                `;
+            } else {
+                content.innerHTML = `
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
+                        ${watchlist.map(movie => createMovieCardHTML(movie)).join('')}
+                    </div>
+                `;
+                
+                // Add click events to watchlist movie cards
+                watchlist.forEach(movie => {
+                    document.getElementById(`movie-${movie.id}`).addEventListener('click', () => {
+                        currentMovie = movie;
+                        showPage('details');
+                    });
+                });
+            }
+        }
+
+        function displayMovieDetails() {
+            if (!currentMovie) return;
+
+            const detailsPage = document.getElementById('details-page');
+            const isInWatchlist = watchlist.some(m => m.id === currentMovie.id);
+            const relatedMovies = getRelatedMovies(currentMovie);
+
+            detailsPage.innerHTML = `
+                <!-- Back Button -->
+                <div class="container mx-auto px-4 py-4">
+                    <button onclick="showPage('home')" class="flex items-center space-x-2 px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                        </svg>
+                        <span>Back to Home</span>
+                    </button>
+                </div>
+
+                <!-- Movie Details -->
+                <div class="relative">
+                    <!-- Backdrop -->
+                    <div class="relative h-96 md:h-[500px] overflow-hidden">
+                        <img
+                            src="${currentMovie.backdrop_path}"
+                            alt="${currentMovie.title}"
+                            class="w-full h-full object-cover"
+                        />
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
+                    </div>
+
+                    <!-- Movie Info -->
+                    <div class="container mx-auto px-4 py-8">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 -mt-32 relative z-10">
+                            <div class="md:col-span-1">
+                                <img
+                                    src="${currentMovie.poster_path}"
+                                    alt="${currentMovie.title}"
+                                    class="w-full max-w-sm mx-auto rounded-lg shadow-2xl"
+                                />
+                            </div>
+                            
+                            <div class="md:col-span-2 text-white">
+                                <h1 class="text-4xl md:text-5xl font-bold mb-4">${currentMovie.title}</h1>
+                                
+                                <div class="flex flex-wrap items-center gap-4 mb-6 text-gray-300">
+                                    <div class="flex items-center">
+                                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                        </svg>
+                                        <span>${new Date(currentMovie.release_date).getFullYear()}</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                        <span>${currentMovie.runtime} min</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <svg class="w-5 h-5 mr-2 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                        </svg>
+                                        <span>${currentMovie.vote_average.toFixed(1)}/10</span>
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-wrap gap-2 mb-6">
+                                    ${currentMovie.genre_ids.map(genreId => `
+                                        <span class="px-3 py-1 bg-gray-800 rounded-full text-sm">
+                                            ${GENRES[genreId] || 'Unknown'}
+                                        </span>
+                                    `).join('')}
+                                </div>
+
+                                <p class="text-lg mb-6 leading-relaxed">${currentMovie.overview}</p>
+
+                                <div class="flex flex-wrap gap-4">
+                                    <button class="flex items-center space-x-2 bg-red-600 hover:bg-red-700 px-6 py-3 rounded-lg font-semibold transition-colors">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"/>
+                                        </svg>
+                                        <span>Watch Trailer</span>
+                                    </button>
+                                    
+                                    <button 
+                                        onclick="toggleWatchlist(${currentMovie.id})"
+                                        class="flex items-center space-x-2 px-6 py-3 rounded-lg font-semibold transition-colors ${isInWatchlist 
+                                            ? 'bg-red-600 hover:bg-red-700 text-white' 
+                                            : 'bg-gray-700 hover:bg-gray-600 text-white border border-gray-600'
+                                        }"
+                                    >
+                                        ${isInWatchlist 
+                                            ? '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>' 
+                                            : '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>'
+                                        }
+                                        <span>${isInWatchlist ? 'In Watchlist' : 'Add to Watchlist'}</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Related Movies -->
+                <div class="py-12 bg-white dark:bg-gray-800 transition-colors duration-300">
+                    <div class="container mx-auto px-4">
+                        <h2 class="text-3xl font-bold mb-8 text-gray-900 dark:text-white">Related Movies</h2>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                            ${relatedMovies.map(movie => `
+                                <div onclick="viewMovie(${movie.id})" class="cursor-pointer transform transition-all duration-300 hover:scale-105">
+                                    <div class="relative overflow-hidden rounded-lg shadow-lg group">
+                                        <img
+                                            src="${movie.poster_path}"
+                                            alt="${movie.title}"
+                                            class="w-full h-80 object-cover transition-transform duration-300 group-hover:scale-110"
+                                        />
+                                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                            <div class="absolute bottom-4 left-4 right-4">
+                                                <h3 class="text-white font-bold text-lg mb-2 line-clamp-2">${movie.title}</h3>
+                                                <div class="flex items-center">
+                                                    <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                                    </svg>
+                                                    <span class="text-white ml-1 text-sm">${movie.vote_average.toFixed(1)}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function getRelatedMovies(movie) {
+            return MOCK_MOVIES
+                .filter(m => m.id !== movie.id && m.genre_ids.some(g => movie.genre_ids.includes(g)))
+                .slice(0, 4);
+        }
+
+        function viewMovie(movieId) {
+            const movie = MOCK_MOVIES.find(m => m.id === movieId);
+            if (movie) {
+                currentMovie = movie;
+                displayMovieDetails();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function toggleDarkMode() {
+            isDarkMode = !isDarkMode;
+            localStorage.setItem('darkMode', isDarkMode.toString());
+            
+            document.documentElement.classList.toggle('dark');
+            
+            const sunIcon = document.getElementById('sun-icon');
+            const moonIcon = document.getElementById('moon-icon');
+            
+            if (isDarkMode) {
+                sunIcon.classList.remove('hidden');
+                moonIcon.classList.add('hidden');
+            } else {
+                sunIcon.classList.add('hidden');
+                moonIcon.classList.remove('hidden');
+            }
+        }
+
+        // Add some additional movies for better demo
+        MOCK_MOVIES.push(
+            {
+                id: 9,
+                title: "Transformers: Rise of the Beasts",
+                poster_path: "https://image.tmdb.org/t/p/w500/gPbM0MK8CP8A174rmUwGsADNYKD.jpg",
+                backdrop_path: "https://image.tmdb.org/t/p/w1280/bz66a19bR6BKsbY8gSZCM4etJiK.jpg",
+                vote_average: 7.4,
+                release_date: "2023-06-09",
+                runtime: 127,
+                overview: "When a new threat capable of destroying the entire planet emerges, Optimus Prime and the Autobots must team up with a powerful faction known as the Maximals.",
+                genre_ids: [28, 12, 878],
+                popularity: 543.211
+            },
+            {
+                id: 10,
+                title: "Scream VI",
+                poster_path: "https://image.tmdb.org/t/p/w500/wDWwtvkRRlgTiUr6TyLSMX8FCuZ.jpg",
+                backdrop_path: "https://image.tmdb.org/t/p/w1280/44immBwzhDVyjn87b3x3l9mlhAD.jpg",
+                vote_average: 7.1,
+                release_date: "2023-03-10",
+                runtime: 122,
+                overview: "Following the latest Ghostface killings, the four survivors leave Woodsboro behind and start a fresh chapter in New York City.",
+                genre_ids: [27, 53],
+                popularity: 432.876
+            },
+            {
+                id: 11,
+                title: "The Super Mario Bros. Movie",
+                poster_path: "https://image.tmdb.org/t/p/w500/qNBAXBIQlnOThrVvA6mTKJCBFZw.jpg",
+                backdrop_path: "https://image.tmdb.org/t/p/w1280/nLBRD7UPR6GjmWQp6ASAfCTaWKX.jpg",
+                vote_average: 7.8,
+                release_date: "2023-04-05",
+                runtime: 92,
+                overview: "While working underground to fix a water main, Brooklyn plumbers—and brothers—Mario and Luigi are transported down a mysterious pipe and wander into a magical new world.",
+                genre_ids: [16, 10751, 12, 14, 35],
+                popularity: 1876.543
+            },
+            {
+                id: 12,
+                title: "Dungeons & Dragons: Honor Among Thieves",
+                poster_path: "https://image.tmdb.org/t/p/w500/A7AoNT06aRAc4SV89Dwxj3EYAgC.jpg",
+                backdrop_path: "https://image.tmdb.org/t/p/w1280/5UA9vXowhGaYaYhpJfVRv7Ovqx0.jpg",
+                vote_average: 7.3,
+                release_date: "2023-03-31",
+                runtime: 134,
+                overview: "A charming thief and a band of unlikely adventurers undertake an epic heist to retrieve a lost relic, but things go dangerously awry when they run afoul of the wrong people.",
+                genre_ids: [12, 14, 35],
+                popularity: 654.321
+            }
+        );
+
+        // Initialize filters with updated movie list
+        setTimeout(() => {
+            filteredMovies = [...MOCK_MOVIES];
+            displayMovies();
+        }, 100);
+    </script>
+</body>
+</html>
