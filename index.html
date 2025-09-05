@@ -6,555 +6,19 @@
   <title>Mostafa Gamal Hassan - Portfolio</title>
   <!-- Bootstrap CSS -->
   <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-    rel="stylesheet"
-  />
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
   <!-- Font Awesome for icons -->
   <link
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-    rel="stylesheet"
-  />
-
-  <style>
-    /* Custom CSS */
-    :root {
-      --primary-color: #007bff;
-      --dark-bg: #000000; /* changed to pure black */
-      --light-bg: #ffffff;
-      --card-bg: #2d2d2d;
-      --card-bg-light: #f8f9fa;
-      --text-color: #f0f0f0; /* near white for readability */
-      --text-color-light: #333333;
-      --text-muted: #bbbbbb;
-      --text-muted-light: #666666;
-    }
-
-    /* Light mode variables */
-    [data-theme="light"] {
-      --dark-bg: #ffffff;
-      --card-bg: #f8f9fa;
-      --text-color: #333333;
-      --text-muted: #666666;
-    }
-
-    body {
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      line-height: 1.6;
-      scroll-behavior: smooth;
-    }
-
-    /* Hero Section */
-    .hero {
-      min-height: 100vh;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      position: relative;
-      overflow: hidden;
-      z-index: 1;
-    }
-
-    [data-theme="light"] .hero {
-      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-    }
-
-    .hero::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0, 0, 0, 0.4);
-      z-index: 2;
-    }
-
-    [data-theme="light"] .hero::before {
-      background: rgba(0, 0, 0, 0.2);
-    }
-
-    .hero .container {
-      position: relative;
-      z-index: 3;
-    }
-
-    .profile-img {
-      width: 300px;
-      height: 300px;
-      object-fit: cover;
-      border: 5px solid rgba(255, 255, 255, 0.3);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-      opacity: 0;
-      transform: scale(0.8);
-      animation: profileFadeIn 1s ease-out 0.5s forwards;
-    }
-
-    @keyframes profileFadeIn {
-      to {
-        opacity: 1;
-        transform: scale(1);
-      }
-    }
-
-    /* Typewriter Effect */
-    .typewriter {
-      overflow: hidden;
-      border-right: 0.15em solid #007bff;
-      white-space: nowrap;
-      margin: 0 auto;
-      animation: typing 3s steps(40, end), blink-caret 0.75s step-end infinite;
-    }
-
-    .typewriter-subtitle {
-      overflow: hidden;
-      white-space: nowrap;
-      margin: 0 auto;
-      opacity: 0;
-      animation: typing-subtitle 2s steps(30, end) 3.5s forwards;
-    }
-
-    @keyframes typing {
-      from {
-        width: 0;
-      }
-      to {
-        width: 100%;
-      }
-    }
-
-    @keyframes typing-subtitle {
-      from {
-        width: 0;
-        opacity: 1;
-      }
-      to {
-        width: 100%;
-        opacity: 1;
-      }
-    }
-
-    @keyframes blink-caret {
-      from,
-      to {
-        border-color: transparent;
-      }
-      50% {
-        border-color: #007bff;
-      }
-    }
-
-    .hero-buttons {
-      opacity: 0;
-      transform: translateY(20px);
-      animation: fadeInUp 1s ease-out 5.5s forwards;
-    }
-
-    .social-icons {
-      opacity: 0;
-      transform: translateY(20px);
-      animation: fadeInUp 1s ease-out 6s forwards;
-    }
-
-    .social-icons a {
-      color: white;
-      margin: 0 15px;
-      transition: all 0.3s ease;
-    }
-
-    .social-icons a:hover {
-      color: var(--primary-color);
-      transform: translateY(-3px);
-    }
-
-    @keyframes fadeInUp {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    /* Scroll Animations */
-    .fade-in {
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 0.8s ease, transform 0.8s ease;
-    }
-
-    .fade-in.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .fade-in-left {
-      opacity: 0;
-      transform: translateX(-50px);
-      transition: opacity 0.8s ease, transform 0.8s ease;
-    }
-
-    .fade-in-left.visible {
-      opacity: 1;
-      transform: translateX(0);
-    }
-
-    .fade-in-right {
-      opacity: 0;
-      transform: translateX(50px);
-      transition: opacity 0.8s ease, transform 0.8s ease;
-    }
-
-    .fade-in-right.visible {
-      opacity: 1;
-      transform: translateX(0);
-    }
-
-    /* Text Animation for Sections */
-    .animate-text {
-      opacity: 0;
-    }
-
-    .animate-text.visible {
-      animation: textReveal 1s ease-out forwards;
-    }
-
-    @keyframes textReveal {
-      0% {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    /* Navbar fixes */
-    .navbar-dark .navbar-nav .nav-link {
-      color: rgba(255, 255, 255, 0.85) !important;
-    }
-
-    .navbar-dark .navbar-nav .nav-link:hover {
-      color: var(--primary-color) !important;
-    }
-    /* Navbar Transparent + Blur (Dark Mode) */
-.navbar {
-  background: rgba(0, 0, 0, 0.6) !important; /* شفاف غامق */
-  backdrop-filter: blur(10px); /* تأثير البلور */
-  -webkit-backdrop-filter: blur(10px); /* دعم Safari */
-  transition: background 0.3s ease;
-}
-
-/* Navbar Transparent + Blur (Light Mode) */
-[data-theme="light"] .navbar {
-  background: rgba(255, 255, 255, 0.7) !important; /* شفاف فاتح */
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-}
-
-
-
-    /* Light mode navbar fixes */
-    [data-theme="light"] .navbar-dark {
-      background-color: #ffffff !important; /* changed to white */
-    }
-
-    [data-theme="light"] .navbar-dark .navbar-nav .nav-link {
-      color: #333333 !important; /* dark text */
-    }
-
-    [data-theme="light"] .navbar-dark .navbar-brand {
-      color: #333333 !important; /* dark brand text */
-    }
-
-    [data-theme="light"] .navbar-dark .dropdown-menu {
-      background-color: #f8f9fa;
-      border: 1px solid #ddd;
-    }
-
-    [data-theme="light"] .navbar-dark .dropdown-item {
-      color: #333333;
-    }
-
-    [data-theme="light"] .navbar-dark .dropdown-item:hover {
-      background-color: #e9ecef;
-      color: var(--primary-color);
-    }
-
-   /* .theme-toggle {
-      position: fixed;
-      top: 50%;
-      right: 20px;
-      transform: translateY(-50%);
-      background: var(--primary-color);
-      border: none;
-      border-radius: 50%;
-      width: 50px;
-      height: 50px;
-      color: white;
-      font-size: 18px;
-      cursor: pointer;
-      z-index: 1000;
-      box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
-      transition: all 0.3s ease;
-    }*/
-    .theme-toggle {
-  position: static;  
-  transform: none;    
-  background: transparent;  
-  border: none;
-  width: auto;
-  height: auto;
-  color: inherit;    
-  font-size: 18px;
-  cursor: pointer;
-  box-shadow: none;
-}
-
-
-    .theme-toggle:hover {
-      transform: translateY(-50%) scale(1.1);
-      box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
-      color: var(--primary-color);
-    }
-
-    /* Resume Toggle Button */
-    .resume-toggle-btn {
-      position: relative;
-      overflow: hidden;
-      transition: all 0.3s ease;
-      padding: 12px 24px;
-      border-radius: 50px;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-    }
-
-    .resume-toggle-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(0, 123, 255, 0.3);
-    }
-
-    .resume-toggle-btn .toggle-icon {
-      transition: transform 0.3s ease;
-    }
-
-    .resume-toggle-btn.expanded .toggle-icon {
-      transform: rotate(180deg);
-    }
-
-    /* Resume Content */
-    .resume-content {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.6s ease-in-out, opacity 0.3s ease;
-      opacity: 0;
-    }
-
-    .resume-content.show {
-      max-height: 2000px;
-      opacity: 1;
-      margin-top: 2rem;
-    }
-
-    /* Resume content animations */
-    .resume-content .row {
-      transform: translateY(20px);
-      opacity: 0;
-      transition: all 0.4s ease;
-    }
-
-    .resume-content.show .row {
-      transform: translateY(0);
-      opacity: 1;
-    }
-
-    .resume-content.show .row:nth-child(1) {
-      transition-delay: 0.1s;
-    }
-    .resume-content.show .row:nth-child(2) {
-      transition-delay: 0.2s;
-    }
-    .resume-content.show .row:nth-child(3) {
-      transition-delay: 0.3s;
-    }
-
-    .bg-dark {
-      background-color: var(--dark-bg) !important;
-      color: var(--text-color) !important;
-      position: relative;
-      z-index: 2;
-    }
-
-    .bg-light-section {
-      background-color: var(--light-bg);
-      color: var(--text-color-light);
-      position: relative;
-      z-index: 2;
-    }
-
-    [data-theme="light"] .bg-dark {
-      background-color: var(--dark-bg) !important;
-      color: var(--text-color) !important;
-    }
-
-    .service-card {
-      background: var(--card-bg);
-      border: none;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      opacity: 0;
-      transform: translateY(30px);
-      color: var(--text-color); /* fixed text color */
-    }
-
-    [data-theme="dark"] .service-card .text-muted {
-    color: #e0e0e0 !important; /* أفتح شويه */
-    }
-
-
-    .service-card.visible {
-      opacity: 1;
-      transform: translateY(0);
-      transition: opacity 0.8s ease, transform 0.8s ease;
-    }
-
-    .service-card:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-    }
-
-    /* Portfolio Cards */
-    .portfolio-card {
-      transition: transform 0.3s ease;
-      opacity: 0;
-      transform: scale(0.9);
-      background: var(--light-bg);
-      color: var(--text-color-light);
-    }
-
-    [data-theme="light"] .portfolio-card {
-      border: 1px solid #e9ecef;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    }
-
-    .portfolio-card.visible {
-      opacity: 1;
-      transform: scale(1);
-      transition: opacity 0.8s ease, transform 0.8s ease;
-    }
-
-    .portfolio-card:hover {
-      transform: scale(1.05);
-    }
-    .figma-btn {
-      background: linear-gradient(90deg, #a259ff, #f24e1e, #ff7262, #1abcfe);
-      color: #fff !important;
-      border: none;
-      font-weight: 600;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .figma-btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-    }
-
-    /* Footer */
-    .footer-icon {
-      color: white;
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      transition: color 0.3s ease;
-    }
-
-    .footer-icon:hover {
-      color: var(--primary-color);
-    }
-
-    [data-theme="light"] .footer {
-      background-color: #f8f9fa; /* light footer bg */
-    }
-
-    [data-theme="light"] .footer-icon {
-      color: #333333; /* dark text/icons in light mode */
-    }
-
-    [data-theme="light"] .footer-icon:hover {
-      color: var(--primary-color); /* keep hover effect */
-    }
-
-    /* Custom stagger delays */
-    .stagger-1 {
-      transition-delay: 0.1s;
-    }
-    .stagger-2 {
-      transition-delay: 0.2s;
-    }
-    .stagger-3 {
-      transition-delay: 0.3s;
-    }
-    .stagger-4 {
-      transition-delay: 0.4s;
-    }
-    .stagger-5 {
-      transition-delay: 0.5s;
-    }
-    .stagger-6 {
-      transition-delay: 0.6s;
-    }
-    .stagger-7 {
-      transition-delay: 0.7s;
-    }
-    .stagger-8 {
-      transition-delay: 0.8s;
-    }
-
-    /* Skill badges styling */
-    .skill-tags {
-      margin-top: 0.75rem;
-    }
-
-    .skill-tags .badge {
-      font-size: 0.75rem;
-      padding: 0.4rem 0.7rem;
-      font-weight: 500;
-    }
-
-    .bg-outline-primary {
-      background-color: transparent !important;
-      border: 1px solid var(--primary-color) !important;
-      color: var(--primary-color) !important;
-    }
-
-    /* Light mode adjustments for skill cards */
-    [data-theme="light"] .service-card {
-      background: var(--card-bg-light);
-      color: var(--text-color-light);
-      border: 1px solid #e9ecef;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    }
-
-    [data-theme="light"] .service-card .text-muted {
-      color: var(--text-muted-light) !important;
-    }
-
-    /* 4. Smooth modern transitions for sections */
-    section {
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 0.8s ease, transform 0.8s ease;
-      will-change: opacity, transform;
-    }
-
-    section.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  </style>
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css">
 </head>
+
+
 <body data-bs-spy="scroll" data-bs-target="#navbar" data-bs-offset="70" data-theme="dark">
-  <!-- Theme Toggle Button -->
-
-
+  
+  
   <!-- Navbar -->
-  <nav id="navbar" class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top shadow">
+<nav id="navbar" class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top shadow">
     <div class="container">
       <a class="navbar-brand fw-bold" href="#home">Design Fast & Code Faster</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navmenu">
@@ -578,13 +42,17 @@
             </ul>
           </li>
           <li class="nav-item"><a href="#contact" class="nav-link">Contact</a></li>
+          <li class="nav-item">
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+              <i class="fas fa-sun" id="themeIcon"></i>
+            </button>
+          </li>
         </ul>
-          <li><button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-          <i class="fas fa-sun" id="themeIcon"></i>
-           </button></li>
       </div>
     </div>
   </nav>
+
+
 
   <!-- Hero Section -->
   <section id="home" class="d-flex align-items-center text-light hero">
@@ -600,15 +68,15 @@
             <a href="#contact" class="btn btn-outline-light">Get in Touch</a>
           </div>
           <div class="social-icons">
-            <a href="https://www.linkedin.com/in/mostafa-jamal-hassan" target="_blank"
-              ><i class="fab fa-linkedin fa-lg"></i
-            ></a>
-            <a href="https://github.com/mostafa7517" target="_blank"
-              ><i class="fab fa-github fa-lg"></i
-            ></a>
-            <a href="https://outlook.live.com/mail/0/?deeplink=mail%2F0%2F%3Fnlp%3D0" target="_blank"
-              ><i class="fas fa-envelope fa-lg"></i
-            ></a>
+            <a href="https://www.linkedin.com/in/mostafa-jamal-hassan" target="_blank">
+              <i class="fab fa-linkedin fa-lg"></i>
+            </a>
+            <a href="https://github.com/mostafa7517" target="_blank">
+              <i class="fab fa-github fa-lg"></i>
+            </a>
+            <a href="https://outlook.live.com/mail/0/?deeplink=mail%2F0%2F%3Fnlp%3D0" target="_blank">
+              <i class="fas fa-envelope fa-lg"></i>
+            </a>
           </div>
         </div>
         <div class="col-lg-6 order-lg-2 order-1 text-center">
@@ -618,23 +86,27 @@
     </div>
   </section>
 
+
+
   <!-- About Section -->
   <section id="about" class="py-5 bg-dark text-light">
     <div class="container">
-      <h2 class="text-center mb-4 fade-in animate-text">About Me<br>Think Design Code </h2>
-      <p class="text-center fade-in animate-text stagger-2">
- <p>
-  Before I start my tech journey, I saw websites that weren't just functional, they felt alive. They made me stop, explore, and think. That spark lit a fire in me to build digital experiences that actually connect with people.
-  <br>
-  I'm Mostafa, a developer who sees stories in code. I turn messy, complex ideas into clean, smooth solutions, but my real edge is <strong>experiences that sell themselves</strong> — interfaces that guide, engage, and convert effortlessly. I don't just make projects, <b>I craft journeys that leave a mark</b>.
-  <br>
-  Every project is a chance to push boundaries, flex creativity, and tell a story that sticks. I don't follow trends, I make them. I design digital journeys that people don't just use, they feel.
-  <br>
-  What sets me apart is a mindset built on <strong>creative problem-solving and adaptability</strong>. I focus on solutions that are not only functional but impactful — blending logic with creativity to deliver results that matter.
-</p>
-
+      <h2 class="text-center mb-4 fade-in animate-text">About Me<br>Think Design Code</h2>
+      <div class="text-center fade-in animate-text stagger-2">
+        <p>
+          Before I start my tech journey, I saw websites that weren't just functional, they felt alive. They made me stop, explore, and think. That spark lit a fire in me to build digital experiences that actually connect with people.
+          <br>
+          I'm Mostafa, a developer who sees stories in code. I turn messy, complex ideas into clean, smooth solutions, but my real edge is <strong>experiences that sell themselves</strong> — interfaces that guide, engage, and convert effortlessly. I don't just make projects, <b>I craft journeys that leave a mark</b>.
+          <br>
+          Every project is a chance to push boundaries, flex creativity, and tell a story that sticks. I don't follow trends, I make them. I design digital journeys that people don't just use, they feel.
+          <br>
+          What sets me apart is a mindset built on <strong>creative problem-solving and adaptability</strong>. I focus on solutions that are not only functional but impactful — blending logic with creativity to deliver results that matter.
+        </p>
+      </div>
     </div>
   </section>
+
+
 
   <!-- Resume Section -->
   <section id="resume" class="py-5 bg-light-section">
@@ -650,13 +122,15 @@
 
       <div id="resumeContent" class="resume-content">
         <div class="row">
+
           <!-- Education -->
           <div class="col-md-6 fade-in-left stagger-1">
             <h4 class="animate-text">Education</h4>
             <p class="animate-text stagger-2">
-                  <!-- <strong>Thebes Academy</strong> — B.Sc. in Computer Science -->
+              <!-- <strong>Thebes Academy</strong>--> —<b> B.Sc.</b> in Computer Science 
             </p>
           </div>
+
           <!-- Experience -->
           <div class="col-md-6 fade-in-right stagger-2">
             <h4 class="animate-text">Experience</h4>
@@ -668,6 +142,7 @@
           </div>
         </div>
         <div class="row mt-4">
+
           <!-- Projects -->
           <div class="col-md-6 fade-in-left stagger-3">
             <h4 class="animate-text">Projects</h4>
@@ -682,6 +157,7 @@
               </li>
             </ul>
           </div>
+
           <!-- Certificates -->
           <div class="col-md-6 fade-in-right stagger-4">
             <h4 class="animate-text">Certificates</h4>
@@ -692,6 +168,7 @@
           </div>
         </div>
         <div class="row mt-4">
+
           <!-- Skills -->
           <div class="col-md-6 fade-in-left stagger-5">
             <h4 class="animate-text">Skills</h4>
@@ -699,6 +176,7 @@
               HTML, CSS, JavaScript, React.js, Bootstrap, Figma, Git, GitHub, C++, C#, SQL, .NET basics
             </p>
           </div>
+
           <!-- Volunteering -->
           <div class="col-md-6 fade-in-right stagger-6">
             <h4 class="animate-text">Volunteering</h4>
@@ -709,6 +187,7 @@
           </div>
         </div>
         <div class="row mt-4">
+
           <!-- Languages -->
           <div class="col-md-12 fade-in">
             <h4 class="animate-text">Languages</h4>
@@ -718,6 +197,8 @@
       </div>
     </div>
   </section>
+
+
 
   <!-- Skills Section -->
   <section id="skills" class="py-5 bg-dark text-light">
@@ -797,6 +278,7 @@
         </div>
       </div>
 
+
       <!-- Soft Skills -->
       <div class="row">
         <div class="col-12">
@@ -847,11 +329,13 @@
     </div>
   </section>
 
+
   <!-- Experience Section -->
   <section id="experience" class="py-5 bg-light-section">
     <div class="container">
       <h2 class="text-center mb-5 fade-in animate-text">Hands-On Experience</h2>
       <div class="row g-4">
+
         <!-- Frontend Intern Experience -->
         <div class="col-lg-4">
           <div class="card portfolio-card h-100 stagger-1">
@@ -924,6 +408,8 @@
     </div>
   </section>
 
+
+
   <!-- Services Section -->
   <section id="services" class="py-5 bg-dark text-light">
     <div class="container">
@@ -960,10 +446,12 @@
     </div>
   </section>
 
+
+
   <!-- Portfolio Section -->
   <section id="portfolio" class="py-5 bg-light-section">
     <div class="container">
-      <h2 class="text-center mb-5 fade-in animate-text">Portfolio</h2>
+      <h2 class="text-center mb-5 fade-in animate-text">WEBSITES</h2>
       <div class="row g-4">
         <div class="col-md-4">
           <div class="card portfolio-card stagger-1">
@@ -995,6 +483,16 @@
             </div>
           </div>
         </div> 
+          <div class="col-md-4">
+            <div class="card portfolio-card stagger-3">
+              <img src="img/AdminDashboard.png" class="card-img-top" alt="Project" />
+              <div class="card-body">
+               <h5 class="card-title">Admin Dashboard</h5>
+              <p class="card-text">Admin Dashboard that can mange post and users </p>
+              <a href="AdminDashboard/AdminDashboard-Posts-Users.html" class="btn btn-sm btn-primary">View Project</a>
+            </div>
+          </div>
+        </div> 
          <div class="col-md-4">
           <div class="card portfolio-card stagger-1">
             <img src="img/MoviesPlatform.png" class="card-img-top" alt="Project" />
@@ -1008,6 +506,8 @@
       </div>
     </div>
   </section>
+
+
 
     <!-- UI/UX Section -->
   <section id="uiux" class="py-5 bg-dark text-light">
@@ -1099,12 +599,14 @@
     </div>
   </section>
 
+
   <!-- Contact Section -->
   <section id="contact" class="py-5 bg-dark text-light">
     <div class="container">
       <h2 class="text-center mb-4 fade-in animate-text">Contact Me</h2>
     </div>
   </section>
+
 
   <!-- Footer -->
   <footer class="footer bg-dark text-light py-3">
@@ -1126,117 +628,6 @@
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-  <script>
-    // Resume Toggle Functionality
-    const resumeToggle = document.getElementById("resumeToggle");
-    const resumeContent = document.getElementById("resumeContent");
-    const toggleIcon = resumeToggle.querySelector(".toggle-icon");
-    const toggleText = resumeToggle.querySelector("span");
-
-    resumeToggle.addEventListener("click", () => {
-      const isExpanded = resumeContent.classList.contains("show");
-
-      if (isExpanded) {
-        // Hide resume
-        resumeContent.classList.remove("show");
-        resumeToggle.classList.remove("expanded");
-        toggleText.textContent = "View Resume";
-        resumeToggle.querySelector("i:first-child").className = "fas fa-eye me-2";
-      } else {
-        // Show resume
-        resumeContent.classList.add("show");
-        resumeToggle.classList.add("expanded");
-        toggleText.textContent = "Hide Resume";
-        resumeToggle.querySelector("i:first-child").className = "fas fa-eye-slash me-2";
-
-        // Re-trigger animations for resume content
-        setTimeout(() => {
-          const resumeElements = resumeContent.querySelectorAll(".animate-text");
-          resumeElements.forEach((el, index) => {
-            setTimeout(() => {
-              el.classList.add("visible");
-            }, index * 100);
-          });
-        }, 300);
-      }
-    });
-
-    // Theme Toggle Functionality
-    const themeToggle = document.getElementById("themeToggle");
-    const themeIcon = document.getElementById("themeIcon");
-    const body = document.body;
-
-    // Check for saved theme preference or default to dark mode
-    const currentTheme = localStorage.getItem("theme") || "dark";
-    body.setAttribute("data-theme", currentTheme);
-    updateThemeIcon(currentTheme);
-
-    themeToggle.addEventListener("click", () => {
-      const currentTheme = body.getAttribute("data-theme");
-      const newTheme = currentTheme === "dark" ? "light" : "dark";
-
-      body.setAttribute("data-theme", newTheme);
-      localStorage.setItem("theme", newTheme);
-      updateThemeIcon(newTheme);
-    });
-
-    function updateThemeIcon(theme) {
-      if (theme === "light") {
-        themeIcon.className = "fas fa-moon";
-      } else {
-        themeIcon.className = "fas fa-sun";
-      }
-    }
-
-    // Intersection Observer for scroll animations
-    const observerOptions = {
-      threshold: 0.1,
-      rootMargin: "0px 0px -50px 0px",
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("visible");
-        }
-      });
-    }, observerOptions);
-
-    // Observe all elements with animation classes and sections
-    document.addEventListener("DOMContentLoaded", function () {
-      const animatedElements = document.querySelectorAll(
-        ".fade-in, .fade-in-left, .fade-in-right, .service-card, .portfolio-card, .animate-text, section"
-      );
-
-      animatedElements.forEach((el) => {
-        observer.observe(el);
-      });
-
-      // Smooth scrolling for navigation links
-      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-        anchor.addEventListener("click", function (e) {
-          e.preventDefault();
-          const target = document.querySelector(this.getAttribute("href"));
-          if (target) {
-            target.scrollIntoView({
-              behavior: "smooth",
-              block: "start",
-            });
-          }
-        });
-      });
-    });
-
-    // Add some parallax effect to hero section
-    window.addEventListener("scroll", () => {
-      const scrolled = window.pageYOffset;
-      const hero = document.querySelector(".hero");
-      if (hero) {
-        hero.style.transform = `translateY(${scrolled * 0.5}px)`;
-      }
-    });
-    
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
